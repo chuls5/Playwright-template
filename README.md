@@ -4,7 +4,20 @@ A comprehensive starter template for setting up Playwright Node.js test automati
 
 ## Why This Template? 💡
 
-Running tests with Playwright is straightforward, but the real challenge lies in integrating test results with tracking systems like Azure DevOps. This template solves that problem by providing a pre-configured setup with Azure reporting capabilities.
+When you run Playwright tests without specifying a reporter, it uses the list reporter by default. This reporter provides a simple output in the console, showing the status of each test (passed, failed, skipped), along with the duration of each test. This default output is helpful for quick test runs and local development but may not be sufficient for larger projects or CI/CD pipelines where more detailed reporting is required.
+
+This template solves that problem by providing a pre-configured setup with Azure reporting capabilities. It uses the built-in JUnit reporter along with the npm package, @alex_neo/playwright-azure-reporter, to publish results for different configurations.
+
+The JUnit reporter produces test results in XML format, which is a standard format used by many CI/CD systems. This XML includes information about each testcase, including its status, time taken, and any error messages.
+
+The @alex_neo/playwright-azure-reporter is a reporter for Playwright that's specifically designed to integrate test results with Azure DevOps. It works by first generating JUnit XML reports using Playwright's built-in JUnit reporter, and then it processes those reports to create test attachments and annotations that are compatible with Azure DevOps pipelines.
+The flow typically works like this:
+
+1. The reporter uses Playwright's JUnit reporter to generate XML test results
+2. It then parses those results and transforms them into a format that can be properly displayed in Azure DevOps
+3. Test results, screenshots, traces, and other artifacts are uploaded as attachments to the Azure DevOps test runs
+
+You'll need to configure it in your Playwright config file with appropriate Azure DevOps connection settings, but you don't need to separately configure the JUnit reporter - that dependency is handled internally by the package.
 
 ## Prerequisites 🛠️
 
@@ -66,7 +79,9 @@ npm install
    cp .env.example .env
    ```
 
-2. Update the `.env` file with your specific configuration values
+2. Update the `.env` file with your specific configuration values:
+   - AZURE_PAT: Your Azure DevOps Personal Access Token
+   - Other environment variables as needed for your tests
 
 ## Project Structure 📂
 
