@@ -1,6 +1,6 @@
 # Playwright (Node.js) Test Framework - Starter Template 🚀
 
-This repository provides a robust test automation template that utilizes Playwright to guarantee the quality and reliability of web applications. It serves as a starting point for users looking to create their own Playwright repository using Node.js and the @alex_neo/azure-reporter for seamless integration with Azure DevOps. The framework supports various testing capabilities, including requirement-based validation, regression testing, smoke testing, functional verification, and end-to-end scenarios. It is configured to validate application behavior across multiple browsers, device profiles, and user journeys.
+This repository provides a starter template for users who plan to use Playwright Node.js with @alex_neo/playwright-azure-reporter to integrate test results with Azure Devops. The Documentation for the @alex_neo reporter can be found here [@alex_neo/playwright-azure-reporter](https://www.npmjs.com/package/@alex_neo/playwright-azure-reporter). When it comes to Playwright, running tests isn't the hard part - the difficulty arises when you want to integrate the results of your tests with Azure DevOps or other tracking systems.
 
 ## Prerequisites 🛠️
 
@@ -49,6 +49,12 @@ git remote add origin <URL>
 ```
 
 ## Project Structure 📁
+
+The project is already setup for you. You just need to follow the instructions from [@alex_neo/playwright-azure-reporter](https://www.npmjs.com/package/@alex_neo/playwright-azure-reporter) to specify the testcase ID in the title of your tests. By default use, '@[111234]' where the numbers correspond to your testcase ID. You will need to specify the testplanID, Organization URL, and project name in the configuration file.
+
+Remember - You only use the Azure reporter when you are publishing your results, so it is commented out by default in the configuration file. Don't worry about turning it 'ON' until you are confident in your tests.
+
+You will need to generate an Azure Personal Access Token (PAT) whi
 
 ```
 ├── enow-playwright/        # Main project directory
