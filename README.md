@@ -1,6 +1,6 @@
 # Playwright (Node.js) Test Framework - Starter Template 🚀
 
-A comprehensive, enterprise-grade test automation template leveraging Playwright to ensure quality and reliability for web applications. This repository is designed to be a template for users who want to establish their own Playwright repository using Node.js and @alex_neo/azure-reporter for integration with Azure DevOps. The framework includes capabilities for requirement-based validation, regression testing, smoke testing, functional verification, and end-to-end scenarios—all configured to validate application behavior across multiple browsers, device profiles, and user journeys.
+This repository provides a robust test automation template that utilizes Playwright to guarantee the quality and reliability of web applications. It serves as a starting point for users looking to create their own Playwright repository using Node.js and the @alex_neo/azure-reporter for seamless integration with Azure DevOps. The framework supports various testing capabilities, including requirement-based validation, regression testing, smoke testing, functional verification, and end-to-end scenarios. It is configured to validate application behavior across multiple browsers, device profiles, and user journeys.
 
 ## Prerequisites 🛠️
 
@@ -12,15 +12,11 @@ Before getting started, ensure you have the following installed:
 
 The commands are:
 
-- "npm --version" : To display the installation version of npm
-- "git --version" : To display the installation version of git
+- "npm -v" : To display the installation version of npm
+- "git -v" : To display the installation version of git
 - "git remote -v" : To verify where your local git repository is connected / pointing to
 
-Your terminal should display the following after typing, "git remote -v".
 If this is your first time here, please continue with project setup below.
-
-origin https://github.com/chuls5/Playwright-template (fetch)
-origin https://github.com/chuls5/Playwright-template (push)
 
 ## Project Setup 🔧
 
@@ -37,20 +33,12 @@ There are two methods to clone the repository: HTTPS (username/password) or SSH 
 
 ```bash
 git clone https://github.com/chuls5/Playwright-template
-```
-
-#### SSH Method (For Users with SSH Setup)
-
-If you already have SSH set up with Github:
-
-```bash
-git clone git@github.com:chuls5/Playwright-template.git
 cd playwright-template
 ```
 
 #### Verify Repository Connection
 
-After cloning, you most likely want to set up your own Git repository for your new Playwright project. You are going to need to initilize a new git repository on your local machine. Then you wll push this repo whatever URL you want. To do this you must first make sure you are NOT connected to my (Cody's) Playwright template on Github. The commands to check & re establish your git origin are as follows:
+After cloning, you most likely want to set up your own Git repository for your new Playwright project. You are going to need to initilize a new git repository on your local machine. Then you wll push your repository to your choice of version control. To do this you must first make sure you are NOT connected to my (Cody's) Playwright template on Github. The commands to check & re establish your git origin are as follows:
 
 ```bash
 git remote -v
@@ -64,7 +52,7 @@ git remote add origin <URL>
 
 ```
 ├── enow-playwright/        # Main project directory
-│   ├── .github/workflows/   # Azure DevOps pipelines
+│   ├── .github/workflows/  # Github pipelines
 │   ├── node_modules/       # Project dependencies
 │   ├── tests/              # Test files
 |   |
@@ -101,7 +89,7 @@ The project uses `playwright.config.js` to configure test execution. Key configu
 
 ## CI Pipeline 🔄
 
-The project is configured to run tests in CI using Azure DevOps Pipelines. The workflow configuration is located in `.github/workflows/`. Pipeline configurations handle:
+The project is configured to run tests in CI using Github Pipelines. The workflow configuration is located in `.github/workflows/`. Pipeline configurations handle:
 
 - 🔄 Automated test runs on Pull Requests
 - 📊 Test report generation and publishing
