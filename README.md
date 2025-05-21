@@ -1,127 +1,145 @@
-# Playwright (Node.js) Test Framework - Starter Template 🚀
+# Playwright Test Framework - Starter Template 🚀
 
-This repository provides a starter template for users who plan to use Playwright Node.js with @alex_neo/playwright-azure-reporter to integrate test results with Azure Devops. The Documentation for the @alex_neo reporter can be found here [@alex_neo/playwright-azure-reporter](https://www.npmjs.com/package/@alex_neo/playwright-azure-reporter). When it comes to Playwright, running tests isn't the hard part - the difficulty arises when you want to integrate the results of your tests with Azure DevOps or other tracking systems.
+A comprehensive starter template for setting up Playwright Node.js test automation with Azure DevOps integration using the [@alex_neo/playwright-azure-reporter](https://www.npmjs.com/package/@alex_neo/playwright-azure-reporter) package.
+
+## Why This Template? 💡
+
+Running tests with Playwright is straightforward, but the real challenge lies in integrating test results with tracking systems like Azure DevOps. This template solves that problem by providing a pre-configured setup with Azure reporting capabilities.
 
 ## Prerequisites 🛠️
 
-Before getting started, ensure you have the following installed:
+Ensure you have the following installed:
 
 - Node.js (v14 or newer)
-- npm (comes with Node.js)
+- npm (included with Node.js)
 - Git
 
-The commands are:
+Verify your installation with:
 
-- "npm -v" : To display the installation version of npm
-- "git --version" : To display the installation version of git
-- "git remote -v" : To verify where your local git repository is connected / pointing to
+```bash
+node -v
+npm -v
+git --version
+```
 
-If this is your first time here, please continue with project setup below.
+## Getting Started 🔧
 
-## Project Setup 🔧
+### 1. Clone and Set Up Your Repository 📁
 
-### 1. Connect to and Clone the Repository 📁
-
-Cloning creates a local copy of the repository on your machine, allowing you to use and modify the code independently of the original repository.
-There are two methods to clone the repository: HTTPS (username/password) or SSH (key-based). HTTPS is the simplest for new users.
-
-#### HTTPS Method (Recommended for New Users)
-
-1. Open your terminal or command prompt
-2. Navigate to the directory where you want to clone the project
-3. Run the clone command:
+#### Clone this template repository:
 
 ```bash
 git clone https://github.com/chuls5/Playwright-template
 cd playwright-template
 ```
 
-#### Verify Repository Connection
+#### Set up your own Git repository:
 
-After cloning, you most likely want to set up your own Git repository for your new Playwright project. You are going to need to initilize a new git repository on your local machine. Then you wll push your repository to your choice of version control. To do this you must first make sure you are NOT connected to my (Cody's) Playwright template on Github. The commands to check & re establish your git origin are as follows:
+1. Check current remote connection:
+
+   ```bash
+   git remote -v
+   ```
+
+2. Remove the original remote:
+
+   ```bash
+   git remote remove origin
+   ```
+
+3. Connect to your own repository:
+   ```bash
+   git remote add origin <YOUR_REPOSITORY_URL>
+   ```
+
+### 2. Install Dependencies 📦
 
 ```bash
-git remote -v
-
-git remote remove origin
-
-git remote add origin <URL>
+npm install
 ```
 
-## Project Structure 📁
+### 3. Configure Environment Variables ⚙️
 
-The project is already setup for you. You just need to follow the instructions from [@alex_neo/playwright-azure-reporter](https://www.npmjs.com/package/@alex_neo/playwright-azure-reporter) to specify the testcase ID in the title of your tests. By default use, '@[111234]' where the numbers correspond to your testcase ID. You will need to specify the testplanID, Organization URL, and project name in the configuration file.
+1. Copy the example environment file:
 
-Remember - You only use the Azure reporter when you are publishing your results, so it is commented out by default in the configuration file. Don't worry about turning it 'ON' until you are confident in your tests.
+   ```bash
+   cp .env.example .env
+   ```
 
-You will need to generate an Azure Personal Access Token (PAT) whi
+2. Update the `.env` file with your specific configuration values
+
+## Project Structure 📂
 
 ```
-├── enow-playwright/        # Main project directory
-│   ├── .github/workflows/  # Github pipelines
-│   ├── node_modules/       # Project dependencies
-│   ├── tests/              # Test files
-|   |
-│   ├── tests-examples/     # Example test files
-│   ├── .env                # Environment variables (gitignored)
-│   ├── .env.example        # Example environment file
-│   ├── playwright.config.js # Playwright configuration
-│   ├── package.json        # Project dependencies and scripts
-│   └── README.md           # Project documentation
-|
-├── playwright/             # Playwright artifacts (auth states, etc.)
-├── playwright-report/      # Generated test reports
-└── test-results/           # Screenshots, videos, and logs
+├── tests/                 # Test files
+├── tests-examples/        # Example test files
+├── .github/workflows/     # GitHub pipeline configurations
+├── playwright.config.js   # Playwright configuration
+├── package.json           # Project dependencies and scripts
+├── .env                   # Environment variables (gitignored)
+├── .env.example           # Example environment file
+└── README.md              # Project documentation
+
+# Generated during test execution:
+├── playwright/            # Playwright artifacts (auth states, etc.)
+├── playwright-report/     # Generated test reports
+└── test-results/          # Screenshots, videos, and logs
 ```
 
-## Test Structure 🧪
+## Azure DevOps Integration 🔄
 
-Tests are organized to cover core application functionality and follow best practices for maintainability and reliability:
+This template includes setup for reporting test results to Azure DevOps:
 
-- 🔑 Authentication state storage to optimize test performance
-- ⚙️ Environment configuration through dotenv
-- 🌐 Cross-browser testing capabilities
-- 📊 Detailed reporting for test results analysis
+1. Use `@[TestID]` in your test titles to link them to Azure DevOps test cases
 
-## Configuration ⚙️
+   ```javascript
+   test("@[123456] Should login successfully", async ({ page }) => {
+     // Test implementation
+   });
+   ```
 
-The project uses `playwright.config.js` to configure test execution. Key configuration options include:
+2. Configure the Azure reporter in `playwright.config.js` with:
 
-- 🌐 Browsers to test (Chromium, Firefox, WebKit)
-- 📱 Viewport sizes
-- ⏱️ Test timeouts
-- 📸 Screenshot and video capture settings
-- ⚡ Parallel execution options
+   - Organization URL
+   - Project name
+   - Test plan ID
+   - Personal Access Token (PAT)
 
-## CI Pipeline 🔄
+3. The Azure reporter is disabled by default (commented out) - enable it only when you're ready to publish results
 
-The project is configured to run tests in CI using Github Pipelines. The workflow configuration is located in `.github/workflows/`. Pipeline configurations handle:
+## Running Tests ▶️
 
-- 🔄 Automated test runs on Pull Requests
-- 📊 Test report generation and publishing
-- 🏗️ Parallel test execution across browsers
-- 🔔 Notification of test results
+Execute all tests:
+
+```bash
+npx playwright test
+```
+
+Run tests in a specific browser:
+
+```bash
+npx playwright test --project=chromium
+```
+
+Run tests in debug mode:
+
+```bash
+npx playwright test --debug
+```
 
 ## Viewing Test Reports 📊
 
-After running tests, HTML reports are generated that show detailed test results:
+After test execution, view the HTML report with:
 
-1. Run tests with the report option:
+```bash
+npx playwright show-report
+```
 
-   ```bash
-   npx playwright test
-   ```
+This opens a detailed report in your browser with test results, screenshots, and traces.
 
-2. View the generated report:
-   ```bash
-   npx playwright show-report
-   ```
+## Writing Effective Tests 📝
 
-This will open a browser with detailed test results, including screenshots and traces for failed tests.
-
-## Writing Tests 📝
-
-Tests are written using Playwright's test framework. Here's a basic example:
+### Basic Example
 
 ```javascript
 import { test, expect } from "@playwright/test";
@@ -133,29 +151,40 @@ test("example test", async ({ page }) => {
 });
 ```
 
-### Best Practices 💡
+### Best Practices 🔍
 
-1. Use page objects to encapsulate page-specific selectors and actions
-2. Organize tests by requirements, feature, or page
-3. Make tests independent from each other
-4. Use descriptive test names
-5. Avoid hardcoded timeouts with `waitFor` functions instead
-6. Use test data helpers for generating test data
+1. **Page Object Pattern**: Encapsulate page-specific selectors and actions
+2. **Organized Structure**: Group tests by features or pages
+3. **Independence**: Each test should run independently
+4. **Descriptive Naming**: Use clear test names that explain the test purpose
+5. **Reliable Waits**: Avoid hardcoded timeouts; use `waitFor` functions
+6. **Test Data Management**: Create helpers for generating test data
 
-## Tutorial Videos 🎬
+## CI Pipeline Configuration 🔄
 
-Get started quickly with these helpful tutorial videos:
+The template includes GitHub Workflows for continuous integration:
 
-1. [Getting Started with Playwright and VS Code](https://www.youtube.com/watch?v=Xz6lhEzgI5I) - Basic introduction to the framework
-2. [Generating Playwright Tests in VS Code](https://www.youtube.com/watch?v=5XIZPqKkdBA) - Step-by-step guide for creating a test
-3. [Debugging Playwright Tests using Traceviewer](https://www.youtube.com/watch?v=yP6AnTxC34s) - Debug your tests using VS Code + Playwright trace view
-4. [Advanced Playwright Youtube Tutorials](https://www.youtube.com/watch?v=ePy0Xl-JpRg&list=PLUDwpEzHYYLsw33jpra65LIvX1nKWpp7-&index=3) - Excellent Playwright Playlist on Youtube
+- Automated test runs on pull requests
+- Parallel test execution across browsers
+- Report generation and publishing
+- Result notifications
 
-## Documentation & Resources 📚
+## Learning Resources 📚
+
+### Tutorial Videos 🎬
+
+1. [Getting Started with Playwright and VS Code](https://www.youtube.com/watch?v=Xz6lhEzgI5I)
+2. [Generating Playwright Tests in VS Code](https://www.youtube.com/watch?v=5XIZPqKkdBA)
+3. [Debugging Playwright Tests using Traceviewer](https://www.youtube.com/watch?v=yP6AnTxC34s)
+4. [Advanced Playwright YouTube Tutorials](https://www.youtube.com/watch?v=ePy0Xl-JpRg&list=PLUDwpEzHYYLsw33jpra65LIvX1nKWpp7-&index=3)
+
+### Documentation 📖
 
 - [Official Playwright Documentation](https://playwright.dev/docs/intro)
-- [Build your first end-to-end test with Playwright](https://learn.microsoft.com/en-us/training/modules/build-with-playwright/)
+- [Microsoft Learn: Build your first end-to-end test with Playwright](https://learn.microsoft.com/en-us/training/modules/build-with-playwright/)
 - [Playwright Best Practices](https://playwright.dev/docs/best-practices)
 - [Swagger API Documentation](https://api.dev-encounterservices.com/api/v2/swagger#)
 
-Happy Hacking! 🚀👩‍💻👨‍💻 & Remember! Always obey the testing GOAT! 🐐🐐
+---
+
+Happy Testing! 🚀👩‍💻👨‍💻 Remember to always obey the testing GOAT! 🐐
