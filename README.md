@@ -12,7 +12,7 @@ Before getting started, ensure you have the following installed:
 
 The commands are:
 
-- "npm --version" : To display the installation version of npm
+- "npm -v" : To display the installation version of npm
 - "git --version" : To display the installation version of git
 - "git remote -v" : To verify where your local git repository is connected / pointing to
 
