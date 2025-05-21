@@ -120,7 +120,55 @@ This template includes setup for reporting test results to Azure DevOps:
    - Test plan ID
    - Personal Access Token (PAT)
 
-3. The Azure reporter is disabled by default (commented out) - enable it only when you're ready to publish results
+3. The Azure reporter is disabled by default (commented out) - enable it only when you're ready to publish results.
+
+   ```javascript
+   [
+     "@alex_neo/playwright-azure-reporter",
+     {
+       orgUrl: "https://dev.azure.com/globalmeddev",
+       token: process.env.AZURE_TOKEN,
+       planId: 114816,
+       projectName: "eNow2",
+       environment: "QA",
+       logging: true,
+       testRunTitle: "Playwright Test Run",
+       publishTestResultsMode: "testRun",
+       uploadAttachments: true,
+       attachmentsType: ["screenshot", "video", "trace"],
+       testCaseIdMatcher: /@\[(\d+)\]/,
+       testPointMapper: async (testCase, testPoints) => {
+         // Get the browser name from the test project
+         const browserName = testCase.parent.project()?.name;
+         // Map browser names to configuration IDs in Azure DevOps
+         switch (browserName) {
+           case "chromium":
+           case "desktop-chrome":
+             return testPoints.filter((testPoint) =>
+               testPoint.configuration.name.includes("Browser Web")
+             );
+           case "chrome-mobile":
+             return testPoints.filter((testPoint) =>
+               testPoint.configuration.name.includes("Browser Chrome Mobile")
+             );
+           case "safari-mobile":
+             return testPoints.filter((testPoint) =>
+               testPoint.configuration.name.includes("Browser Safari Mobile")
+             );
+           default:
+             // If no specific mapping is found, return the first test point
+             return testPoints.length > 0 ? [testPoints[0]] : [];
+         }
+       },
+       testRunConfig: {
+         owner: {
+           displayName: "Cody Huls",
+         },
+         comment: "Playwright Test Run",
+       },
+     },
+   ];
+   ```
 
 ## Running Tests ▶️
 
