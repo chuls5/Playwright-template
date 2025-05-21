@@ -93,7 +93,7 @@ This template includes setup for reporting test results to Azure DevOps:
 1. Use `@[TestID]` in your test titles to link them to Azure DevOps test cases
 
    ```javascript
-   test("@[123456] Should login successfully", async ({ page }) => {
+   test("Should login successfully @[123456] ", async ({ page }) => {
      // Test implementation
    });
    ```
