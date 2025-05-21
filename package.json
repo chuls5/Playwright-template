@@ -1,0 +1,23 @@
+{
+  "name": "playwright-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chuls5/Playwright-template.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/chuls5/Playwright-template/issues"
+  },
+  "homepage": "https://github.com/chuls5/Playwright-template#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.21"
+  }
+}
