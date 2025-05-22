@@ -116,9 +116,9 @@ This template includes setup for reporting test results to Azure DevOps:
 2. Configure the Azure reporter in `playwright.config.js` with your enviorment:
 
    - {Personal Access Token (PAT) } = token: process.env.AZURE_TOKEN
-   - {Organization URL} = orgUrl: "https://dev.azure.com/globalmeddev"
-   - {Project name} = projectName: "eNow2"
-   - {Test plan ID} = planId: 114816
+   - {Organization URL} = orgUrl: "https://dev.azure.com/<your-organization-name>"
+   - {Project name} = projectName: "<your-project-name>"
+   - {Test plan ID} = planId: <your-test-planId>
    
 
 4. The Azure reporter is disabled by default (commented out) - enable it only when you're ready to publish results.
@@ -129,8 +129,8 @@ This template includes setup for reporting test results to Azure DevOps:
      {
        orgUrl: "https://dev.azure.com/globalmeddev",
        token: process.env.AZURE_TOKEN,
-       planId: 114816,
-       projectName: "eNow2",
+       planId: 123456,
+       projectName: "exampleProject",
        environment: "QA",
        logging: true,
        testRunTitle: "Playwright Test Run",
@@ -163,7 +163,7 @@ This template includes setup for reporting test results to Azure DevOps:
        },
        testRunConfig: {
          owner: {
-           displayName: "Cody Huls",
+           displayName: "<your-azureDevOps-account-name>",
          },
          comment: "Playwright Test Run",
        },
