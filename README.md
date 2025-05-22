@@ -127,10 +127,10 @@ This template includes setup for reporting test results to Azure DevOps:
    [
      "@alex_neo/playwright-azure-reporter",
      {
-       orgUrl: "https://dev.azure.com/globalmeddev",
+       orgUrl: "https://dev.azure.com/<your-organization-name>",
        token: process.env.AZURE_TOKEN,
-       planId: 123456,
-       projectName: "exampleProject",
+       planId: <your-test-planId>,
+       projectName: "<your-project-name>",
        environment: "QA",
        logging: true,
        testRunTitle: "Playwright Test Run",
@@ -208,16 +208,41 @@ This opens a detailed report in your browser with test results, screenshots, and
 ```javascript
 import { test, expect } from "@playwright/test";
 
-test("example test", async ({ page }) => {
-  await page.goto("https://example.com");
-  await expect(page).toHaveTitle(/Example Domain/);
-  await expect(page.locator("h1")).toContainText("Example Domain");
+test('Validate Password Reset Confirmation Page @[114944]', async ({ page }) => {
+    // Navigate to the login page
+    await page.goto('/');
+
+    // Navigate to the password page
+    await page.getByRole('textbox', { name: 'Enter email' }).click();
+    await page.getByRole('textbox', { name: 'Enter email' }).fill('chuls+pat1@globalmed.com');
+    await page.getByRole('button', { name: 'Next' }).click();
+
+    // Navigate to the forgot password page
+    const passwordLink = page.getByRole('link', { name: 'Forgot Password' });
+    await expect(passwordLink).toBeVisible();
+    await passwordLink.click();
+
+    // Click on the 'Send Email' button
+    const sendEmailButton = page.getByRole('button', { name: 'Send Email' });
+    await sendEmailButton.click();
+
+    // Verify the URL contains, /password-reset-confirmation
+    await expect(page).toHaveURL(/.*\/password-reset-confirmation/);
+
+    // Verify the page contents
+    await expect(page.getByRole('heading', { name: 'Your reset password link was' })).toBeVisible();
+    await expect(page.getByText('Use the link that we emailed')).toBeVisible();
+    await expect(page.getByText('Didn’t receive a link?')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Resend link' })).toBeVisible();
+    await expect(page.getByText('© 2002-2025 GlobalMed®. All')).toBeVisible();
+    await expect(page.getByRole('img', { name: 'welcome' })).toBeVisible();
+    await expect(page.getByTestId('popover-trigger').locator('div').filter({ hasText: 'English' })).toBeVisible();
 });
 ```
 
 ### Best Practices 🔍
 
-1. **Page Object Pattern**: Encapsulate page-specific selectors and actions
+1. **Page Object Pattern**: Encapsulate page-specific selectors and actions (especially useful for large test suites)
 2. **Organized Structure**: Group tests by features or pages
 3. **Independence**: Each test should run independently
 4. **Descriptive Naming**: Use clear test names that explain the test purpose
@@ -239,12 +264,12 @@ The template includes GitHub Workflows for continuous integration:
 
 1. [Getting Started with Playwright and VS Code](https://www.youtube.com/watch?v=Xz6lhEzgI5I)
 2. [Generating Playwright Tests in VS Code](https://www.youtube.com/watch?v=5XIZPqKkdBA)
-3. [Debugging Playwright Tests using Traceviewer](https://www.youtube.com/watch?v=yP6AnTxC34s)
-4. [Advanced Playwright YouTube Tutorials](https://www.youtube.com/watch?v=ePy0Xl-JpRg&list=PLUDwpEzHYYLsw33jpra65LIvX1nKWpp7-&index=3)
+3. [Advanced Playwright YouTube Tutorial Playlist 30+ Videos](https://www.youtube.com/watch?v=ePy0Xl-JpRg&list=PLUDwpEzHYYLsw33jpra65LIvX1nKWpp7-&index=3)
 
 ### Documentation 📖
 
 - [Official Playwright Documentation](https://playwright.dev/docs/intro)
+- [Official Azure Test Plan Documentation](https://learn.microsoft.com/en-us/azure/devops/test/overview?view=azure-devops)
 - [Microsoft Learn: Build your first end-to-end test with Playwright](https://learn.microsoft.com/en-us/training/modules/build-with-playwright/)
 - [Playwright Best Practices](https://playwright.dev/docs/best-practices)
 - [Swagger API Documentation](https://api.dev-encounterservices.com/api/v2/swagger#)
