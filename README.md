@@ -1,279 +1,244 @@
 # Playwright Test Framework - Starter Template 🚀
 
-A comprehensive starter template for setting up Playwright Node.js test automation with Azure DevOps integration using the [@alex_neo/playwright-azure-reporter](https://www.npmjs.com/package/@alex_neo/playwright-azure-reporter) package.
+A comprehensive starter template for setting up Playwright Node.js test automation with seamless Azure DevOps integration using the [@alex_neo/playwright-azure-reporter](https://www.npmjs.com/package/@alex_neo/playwright-azure-reporter) package.
 
 ## Why This Template? 💡
 
-When you run Playwright tests without specifying a reporter, it uses the list reporter by default. This reporter provides a simple output in the console, showing the status of each test (passed, failed, skipped), along with the duration of each test. This default output is helpful for quick test runs and local development but may not be sufficient for larger projects or CI/CD pipelines where more detailed reporting is required.
+Setting up Playwright is straightforward, but integrating test results with Azure DevOps can be complex. This template solves that problem by providing a pre-configured setup that handles the heavy lifting for you.
 
-This template solves that problem by providing a pre-configured setup with Azure reporting capabilities. It uses the built-in JUnit reporter along with the npm package, @alex_neo/playwright-azure-reporter, to publish results for different configurations.
+**What this template provides:**
+- Pre-configured Azure DevOps integration
+- JUnit XML reporting for CI/CD compatibility
+- Multi-browser configuration support
+- Automated test result publishing
+- Screenshot, video, and trace attachment handling
 
-The JUnit reporter produces test results in XML format, which is a standard format used by many CI/CD systems. This XML includes information about each testcase, including its status, time taken, and any error messages.
+The integration works by using Playwright's built-in JUnit reporter alongside the @alex_neo/playwright-azure-reporter package to automatically publish test results to your Azure DevOps test plans.
 
-The @alex_neo/playwright-azure-reporter is a reporter for Playwright that's specifically designed to integrate test results with Azure DevOps. It works by first generating JUnit XML reports using Playwright's built-in JUnit reporter, and then it processes those reports to create test attachments and annotations that are compatible with Azure DevOps pipelines.
-The flow typically works like this:
+## Quick Start 🚀
 
-1. The reporter uses Playwright's JUnit reporter to generate XML test results
-2. It then parses those results and transforms them into a format that can be properly displayed in Azure DevOps
-3. Test results, screenshots, traces, and other artifacts are uploaded as attachments to the Azure DevOps test runs
-
-You'll need to configure it in your Playwright config file with appropriate Azure DevOps connection settings, but you don't need to separately configure the JUnit reporter - that dependency is handled internally by the package.
-
-## Prerequisites 🛠️
-
-Ensure you have the following installed:
+### Prerequisites
 
 - Node.js (v14 or newer)
 - npm (included with Node.js)
 - Git
+- Azure DevOps account with appropriate permissions
 
-Verify your installation with:
-
-```bash
-node -v
-npm -v
-git --version
-```
-
-## Getting Started 🔧
-
-### 1. Clone and Set Up Your Repository 📁
-
-#### Clone this template repository:
+### 1. Clone and Setup
 
 ```bash
+# Clone the template
 git clone https://github.com/chuls5/Playwright-template
 cd playwright-template
-```
 
-#### Set up your own Git repository:
+# Remove original remote and add your own
+git remote remove origin
+git remote add origin <YOUR_REPOSITORY_URL>
 
-1. Check current remote connection:
-
-   ```bash
-   git remote -v
-   ```
-
-2. Remove the original remote:
-
-   ```bash
-   git remote remove origin
-   ```
-
-3. Connect to your own repository:
-   ```bash
-   git remote add origin <YOUR_REPOSITORY_URL>
-   ```
-
-### 2. Install Dependencies 📦
-
-```bash
+# Install dependencies
 npm install
 ```
 
-### 3. Configure Environment Variables ⚙️
+### 2. Configure Environment Variables
 
-1. Copy the example environment file:
+```bash
+# Copy the example environment file
+cp .env.example .env
+```
 
-   ```bash
-   cp .env.example .env
-   ```
+Edit the `.env` file with your Azure DevOps details:
+```env
+AZURE_TOKEN=your_personal_access_token_here
+```
 
-2. Update the `.env` file with your specific configuration values:
-   - AZURE_PAT: Your Azure DevOps Personal Access Token
-   - Other environment variables as needed for your tests
+### 3. Configure Azure DevOps Integration
+
+In `playwright.config.js`, update the Azure reporter configuration with your specific details:
+
+```javascript
+// Uncomment and configure when ready to use Azure integration
+/*
+[
+  "@alex_neo/playwright-azure-reporter",
+  {
+    orgUrl: "https://dev.azure.com/<your-organization-name>",
+    token: process.env.AZURE_TOKEN,
+    planId: <your-test-plan-id>,
+    projectName: "<your-project-name>",
+    environment: "QA",
+    logging: true,
+    testRunTitle: "Playwright Test Run",
+    publishTestResultsMode: "testRun",
+    uploadAttachments: true,
+    attachmentsType: ["screenshot", "video", "trace"],
+    testCaseIdMatcher: /@\[(\d+)\]/,
+    // ... rest of configuration
+  },
+]
+*/
+```
+
+**You'll need these four pieces of information:**
+1. **Personal Access Token (PAT)** - Create one in Azure DevOps with Test Plan permissions
+2. **Organization URL** - Format: `https://dev.azure.com/your-organization-name`
+3. **Project Name** - Your Azure DevOps project name
+4. **Test Plan ID** - The numeric ID of your test plan
+
+### 4. Link Tests to Azure DevOps (Optional)
+
+To link your Playwright tests to Azure DevOps test cases, include the test case ID in your test title:
+
+```javascript
+test('Should login successfully @[123456]', async ({ page }) => {
+  // Your test code here
+});
+```
+
+## Running Tests ▶️
+
+```bash
+# Run all tests
+npx playwright test
+
+# Run specific browser
+npx playwright test --project=chromium
+
+# Debug mode
+npx playwright test --debug
+
+# View HTML report
+npx playwright show-report
+```
 
 ## Project Structure 📂
 
 ```
-├── tests/                 # Test files
-├── tests-examples/        # Example test files
-├── .github/workflows/     # GitHub pipeline configurations
-├── playwright.config.js   # Playwright configuration
-├── package.json           # Project dependencies and scripts
-├── .env                   # Environment variables (gitignored)
-├── .env.example           # Example environment file
-└── README.md              # Project documentation
+├── tests/                 # Your test files go here
+├── tests-examples/        # Example test files for reference
+├── .github/workflows/     # CI/CD pipeline configurations
+├── playwright.config.js   # Main Playwright configuration
+├── package.json           # Dependencies and scripts
+├── .env                   # Your environment variables (gitignored)
+├── .env.example           # Template for environment variables
+└── README.md              # This documentation
 
-# Generated during test execution:
-├── playwright/            # Playwright artifacts (auth states, etc.)
-├── playwright-report/     # Generated test reports
-└── test-results/          # Screenshots, videos, and logs
+# Generated during test runs:
+├── playwright-report/     # HTML test reports
+├── test-results/          # Screenshots, videos, traces
+└── playwright/            # Playwright internal files
 ```
 
-## Azure DevOps Integration 🔄
+## Writing Tests 📝
 
-This template includes setup for reporting test results to Azure DevOps:
-
-1. Use `@[TestID]` in your test titles to link them to Azure DevOps test cases
-
-   ```javascript
-   test("Should login successfully @[123456] ", async ({ page }) => {
-     // Test implementation
-   });
-   ```
-
-2. Configure the Azure reporter in `playwright.config.js` with your enviorment:
-
-   - {Personal Access Token (PAT) } = token: process.env.AZURE_TOKEN
-   - {Organization URL} = orgUrl: "https://dev.azure.com/<your-organization-name>"
-   - {Project name} = projectName: "<your-project-name>"
-   - {Test plan ID} = planId: <your-test-planId>
-   
-
-4. The Azure reporter is disabled by default (commented out) - enable it only when you're ready to publish results.
-
-   ```javascript
-   [
-     "@alex_neo/playwright-azure-reporter",
-     {
-       orgUrl: "https://dev.azure.com/<your-organization-name>",
-       token: process.env.AZURE_TOKEN,
-       planId: <your-test-planId>,
-       projectName: "<your-project-name>",
-       environment: "QA",
-       logging: true,
-       testRunTitle: "Playwright Test Run",
-       publishTestResultsMode: "testRun",
-       uploadAttachments: true,
-       attachmentsType: ["screenshot", "video", "trace"],
-       testCaseIdMatcher: /@\[(\d+)\]/,
-       testPointMapper: async (testCase, testPoints) => {
-         // Get the browser name from the test project
-         const browserName = testCase.parent.project()?.name;
-         // Map browser names to configuration IDs in Azure DevOps
-         switch (browserName) {
-           case "chromium":
-           case "desktop-chrome":
-             return testPoints.filter((testPoint) =>
-               testPoint.configuration.name.includes("Browser Web")
-             );
-           case "chrome-mobile":
-             return testPoints.filter((testPoint) =>
-               testPoint.configuration.name.includes("Browser Chrome Mobile")
-             );
-           case "safari-mobile":
-             return testPoints.filter((testPoint) =>
-               testPoint.configuration.name.includes("Browser Safari Mobile")
-             );
-           default:
-             // If no specific mapping is found, return the first test point
-             return testPoints.length > 0 ? [testPoints[0]] : [];
-         }
-       },
-       testRunConfig: {
-         owner: {
-           displayName: "<your-azureDevOps-account-name>",
-         },
-         comment: "Playwright Test Run",
-       },
-     },
-   ];
-   ```
-
-## Running Tests ▶️
-
-Execute all tests:
-
-```bash
-npx playwright test
-```
-
-Run tests in a specific browser:
-
-```bash
-npx playwright test --project=chromium
-```
-
-Run tests in debug mode:
-
-```bash
-npx playwright test --debug
-```
-
-## Viewing Test Reports 📊
-
-After test execution, view the HTML report with:
-
-```bash
-npx playwright show-report
-```
-
-This opens a detailed report in your browser with test results, screenshots, and traces.
-
-## Writing Effective Tests 📝
-
-### Basic Example
+### Basic Test Example
 
 ```javascript
 import { test, expect } from "@playwright/test";
 
-test('Validate Password Reset Confirmation Page @[114944]', async ({ page }) => {
-    // Navigate to the login page
-    await page.goto('/');
-
-    // Navigate to the password page
-    await page.getByRole('textbox', { name: 'Enter email' }).click();
-    await page.getByRole('textbox', { name: 'Enter email' }).fill('chuls+pat1@globalmed.com');
-    await page.getByRole('button', { name: 'Next' }).click();
-
-    // Navigate to the forgot password page
-    const passwordLink = page.getByRole('link', { name: 'Forgot Password' });
-    await expect(passwordLink).toBeVisible();
-    await passwordLink.click();
-
-    // Click on the 'Send Email' button
-    const sendEmailButton = page.getByRole('button', { name: 'Send Email' });
-    await sendEmailButton.click();
-
-    // Verify the URL contains, /password-reset-confirmation
-    await expect(page).toHaveURL(/.*\/password-reset-confirmation/);
-
-    // Verify the page contents
-    await expect(page.getByRole('heading', { name: 'Your reset password link was' })).toBeVisible();
-    await expect(page.getByText('Use the link that we emailed')).toBeVisible();
-    await expect(page.getByText('Didn’t receive a link?')).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Resend link' })).toBeVisible();
-    await expect(page.getByText('© 2002-2025 GlobalMed®. All')).toBeVisible();
-    await expect(page.getByRole('img', { name: 'welcome' })).toBeVisible();
-    await expect(page.getByTestId('popover-trigger').locator('div').filter({ hasText: 'English' })).toBeVisible();
+test('User can reset password @[114944]', async ({ page }) => {
+  // Navigate and interact with the page
+  await page.goto('/login');
+  await page.getByRole('textbox', { name: 'Enter email' }).fill('user@example.com');
+  await page.getByRole('button', { name: 'Next' }).click();
+  
+  // Click forgot password link
+  await page.getByRole('link', { name: 'Forgot Password' }).click();
+  await page.getByRole('button', { name: 'Send Email' }).click();
+  
+  // Verify the result
+  await expect(page).toHaveURL(/.*\/password-reset-confirmation/);
+  await expect(page.getByRole('heading', { name: 'Your reset password link was' })).toBeVisible();
 });
 ```
 
-### Best Practices 🔍
+### Best Practices
 
-1. **Page Object Pattern**: Encapsulate page-specific selectors and actions (especially useful for large test suites)
-2. **Organized Structure**: Group tests by features or pages
-3. **Independence**: Each test should run independently
-4. **Descriptive Naming**: Use clear test names that explain the test purpose
-5. **Reliable Waits**: Avoid hardcoded timeouts; use `waitFor` functions
-6. **Test Data Management**: Create helpers for generating test data
+- **Use descriptive test names** that explain what you're testing
+- **Make tests independent** - each test should work on its own
+- **Use reliable selectors** - prefer `getByRole()`, `getByText()`, and `getByTestId()`
+- **Include test case IDs** in titles when linking to Azure DevOps
+- **Group related tests** in the same file or describe blocks
 
-## CI Pipeline Configuration 🔄
+## Azure DevOps Integration Details 🔄
 
-The template includes GitHub Workflows for continuous integration:
+### How It Works
 
-- Automated test runs on pull requests
-- Parallel test execution across browsers
-- Report generation and publishing
-- Result notifications
+1. Run your tests locally with the Azure reporter enabled
+2. The reporter automatically creates a test run in your specified Azure DevOps test plan
+3. Test results are published with full details including:
+   - Pass/fail status
+   - Execution time
+   - Screenshots on failure
+   - Video recordings
+   - Trace files for debugging
+
+### Multi-Browser Support
+
+The template includes configuration mapping for different browsers:
+- **Chromium/Chrome** → Maps to "Browser Web" configuration
+- **Chrome Mobile** → Maps to "Browser Chrome Mobile" configuration  
+- **Safari Mobile** → Maps to "Browser Safari Mobile" configuration
+
+This allows you to run the same tests across multiple browser configurations and see separate results in Azure DevOps.
+
+### Enabling Azure Integration
+
+The Azure reporter is commented out by default. To enable it:
+
+1. Ensure your `.env` file has the correct `AZURE_TOKEN`
+2. Update the configuration values in `playwright.config.js`
+3. Uncomment the Azure reporter section
+4. Run your tests normally - results will automatically publish to Azure DevOps
+
+## CI/CD Pipeline 🔄
+
+The template includes GitHub Actions workflows for:
+- Automated test execution on pull requests
+- Parallel test runs across multiple browsers
+- Automatic report generation and publishing
+- Integration with Azure DevOps for result tracking
+
+## Troubleshooting 🔧
+
+### Common Issues
+
+**Tests not linking to Azure DevOps:**
+- Verify your test case ID format: `@[123456]`
+- Ensure the test case exists in your test plan
+- Check your Personal Access Token permissions
+
+**Reporter not publishing results:**
+- Confirm all four required configuration values are correct
+- Verify your PAT has "Test Plans (read & write)" permissions
+- Check the Azure reporter is uncommented in the config
+
+**Tests failing to run:**
+- Run `npx playwright install` to ensure browsers are installed
+- Check your base URL configuration matches your test environment
 
 ## Learning Resources 📚
 
-### Tutorial Videos 🎬
+### Video Tutorials
+- [Getting Started with Playwright and VS Code](https://www.youtube.com/watch?v=Xz6lhEzgI5I)
+- [Generating Playwright Tests in VS Code](https://www.youtube.com/watch?v=5XIZPqKkdBA)
+- [Advanced Playwright Tutorial Playlist](https://www.youtube.com/watch?v=ePy0Xl-JpRg&list=PLUDwpEzHYYLsw33jpra65LIvX1nKWpp7-)
 
-1. [Getting Started with Playwright and VS Code](https://www.youtube.com/watch?v=Xz6lhEzgI5I)
-2. [Generating Playwright Tests in VS Code](https://www.youtube.com/watch?v=5XIZPqKkdBA)
-3. [Advanced Playwright YouTube Tutorial Playlist 30+ Videos](https://www.youtube.com/watch?v=ePy0Xl-JpRg&list=PLUDwpEzHYYLsw33jpra65LIvX1nKWpp7-&index=3)
-
-### Documentation 📖
-
+### Documentation
 - [Official Playwright Documentation](https://playwright.dev/docs/intro)
-- [Official Azure Test Plan Documentation](https://learn.microsoft.com/en-us/azure/devops/test/overview?view=azure-devops)
-- [Microsoft Learn: Build your first end-to-end test with Playwright](https://learn.microsoft.com/en-us/training/modules/build-with-playwright/)
+- [Azure Test Plans Documentation](https://learn.microsoft.com/en-us/azure/devops/test/overview?view=azure-devops)
+- [Microsoft Learn: Build with Playwright](https://learn.microsoft.com/en-us/training/modules/build-with-playwright/)
 - [Playwright Best Practices](https://playwright.dev/docs/best-practices)
-- [Swagger API Documentation](https://api.dev-encounterservices.com/api/v2/swagger#)
+
+## Support 💬
+
+If you run into issues or have questions:
+1. Check the troubleshooting section above
+2. Review the example tests in the `tests-examples/` folder
+3. Consult the official Playwright documentation
+4. Open an issue in this repository
 
 ---
+
+Happy testing! 🎭✨
 
 Happy Testing! 🚀👩‍💻👨‍💻 Remember to always obey the testing GOAT! 🐐
